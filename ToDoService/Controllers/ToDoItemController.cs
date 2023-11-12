@@ -10,10 +10,10 @@ namespace ToDoService.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ToDoItemController : ControllerBase
+    public class ToDoItemsController : ControllerBase
     {
-        private static long currentId = 0;
-        private static long thorwExceptionIndex = 0;
+        private static long currentId = 1;
+        private static long thorwExceptionIndex = 1;
         private static List<ToDoItem> toDoItems = new List<ToDoItem>()
         {
             new ToDoItem()
@@ -56,14 +56,14 @@ namespace ToDoService.Controllers
             return CreatedAtAction(nameof(Get), new { id = toDoItem.Id }, toDoItem);
         }
 
-        [HttpPut]
-        public ToDoItem Update(ToDoItem todoItem)
+        [HttpPut("{id}")]
+        public ToDoItem Update(long id, ToDoItem todoItem)
         {
             CheckAndThrowException();
-            var foundToDoItem = toDoItems.FirstOrDefault(item => item.Id == todoItem.Id);
+            var foundToDoItem = toDoItems.FirstOrDefault(item => item.Id == id);
             if (foundToDoItem != null)
             {
-                foundToDoItem.IsDone = true;
+                foundToDoItem.IsDone = todoItem.IsDone;
                 foundToDoItem.Description = todoItem.Description;
                 foundToDoItem.Title = todoItem.Title;
             }
@@ -71,7 +71,7 @@ namespace ToDoService.Controllers
             return foundToDoItem;
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public ToDoItem Delete(long id)
         {
             CheckAndThrowException();
